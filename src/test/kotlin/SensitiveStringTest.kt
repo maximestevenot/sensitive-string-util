@@ -14,7 +14,7 @@ internal class SensitiveStringTest {
     @org.junit.jupiter.api.Test
     fun `from byte array should work`() {
         val bytes = "123".toByteArray()
-        val secret = SensitiveString.fromBytes(bytes)
+        val secret = SensitiveString.fromByteArray(bytes)
 
         assert(secret.data.contentEquals("123".toCharArray()))
     }
@@ -22,7 +22,7 @@ internal class SensitiveStringTest {
     @org.junit.jupiter.api.Test
     fun `from byte buffer should work`() {
         val bytes = "123".toByteArray()
-        val secret = SensitiveString.fromBytes(ByteBuffer.wrap(bytes))
+        val secret = SensitiveString.fromByteBuffer(ByteBuffer.wrap(bytes))
 
         assert(secret.data.contentEquals("123".toCharArray()))
     }
@@ -77,4 +77,35 @@ internal class SensitiveStringTest {
         assert(secret.toString() == "****")
         assert(secret.data.contentEquals("1234".toCharArray()))
     }
+
+
+    @org.junit.jupiter.api.Test
+    fun `string extension should work`() {
+        assert("1234".toSensitiveString() == SensitiveString.fromString("1234"))
+    }
+
+    @org.junit.jupiter.api.Test
+    fun `char array extension should work`() {
+        val input = "1234".toCharArray()
+        assert(input.toSensitiveString() == SensitiveString.fromString("1234"))
+    }
+
+    @org.junit.jupiter.api.Test
+    fun `char buffer extension should work`() {
+        val input = CharBuffer.wrap("1234".toCharArray())
+        assert(input.toSensitiveString() == SensitiveString.fromString("1234"))
+    }
+
+    @org.junit.jupiter.api.Test
+    fun `byte array extension should work`() {
+        val input = "1234".toByteArray()
+        assert(input.toSensitiveString() == SensitiveString.fromString("1234"))
+    }
+
+    @org.junit.jupiter.api.Test
+    fun `byte buffer extension should work`() {
+        val input = ByteBuffer.wrap("1234".toByteArray())
+        assert(input.toSensitiveString() == SensitiveString.fromString("1234"))
+    }
+
 }
