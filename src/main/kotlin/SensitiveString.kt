@@ -1,19 +1,34 @@
+import java.nio.ByteBuffer
+import java.nio.CharBuffer
+import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
+
 class SensitiveString(
     val data: CharArray
 ) {
 
     companion object {
-        fun fromString(inputString: String): SensitiveString {
-            return SensitiveString(inputString.toCharArray())
-        }
+        private val DEFAULT_CHARSET = StandardCharsets.UTF_8
+
+        fun fromString(inputString: String): SensitiveString = SensitiveString(inputString.toCharArray())
+
+        fun fromByteArray(inputByteArray: ByteArray, charset: Charset = DEFAULT_CHARSET): SensitiveString =
+            SensitiveString(charset.decode(ByteBuffer.wrap(inputByteArray)).array())
     }
 
-    fun clear() {
-        data.fill('0')
-    }
+
+    fun clear() = data.fill('0')
 
     fun equals(other: String): Boolean {
         return this == fromString(other)
+    }
+
+    fun equals(other: CharArray): Boolean {
+        return this == SensitiveString(other)
+    }
+
+    fun equals(other: ByteArray, charset: Charset = DEFAULT_CHARSET): Boolean {
+        return this == fromByteArray(other, charset)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -27,11 +42,10 @@ class SensitiveString(
         return true
     }
 
-    override fun hashCode(): Int {
-        return data.contentHashCode()
-    }
+    override fun hashCode(): Int = data.contentHashCode()
 
-    override fun toString(): String {
-        return data.concatToString()
-    }
+    override fun toString(): String = data.map { '*' }.toCharArray().concatToString()
+
+    fun toByteArray(charset: Charset = DEFAULT_CHARSET): ByteArray = charset.encode(CharBuffer.wrap(data)).array()
+
 }
