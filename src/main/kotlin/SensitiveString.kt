@@ -12,8 +12,13 @@ class SensitiveString(
 
         fun fromString(inputString: String): SensitiveString = SensitiveString(inputString.toCharArray())
 
-        fun fromByteArray(inputByteArray: ByteArray, charset: Charset = DEFAULT_CHARSET): SensitiveString =
-            SensitiveString(charset.decode(ByteBuffer.wrap(inputByteArray)).array())
+        fun fromBytes(inputByteArray: ByteArray, charset: Charset = DEFAULT_CHARSET): SensitiveString =
+            fromBytes(ByteBuffer.wrap(inputByteArray), charset)
+
+        fun fromBytes(inputByteBuffer: ByteBuffer, charset: Charset = DEFAULT_CHARSET): SensitiveString =
+            SensitiveString(charset.decode(inputByteBuffer).array())
+
+        fun fromCharBuffer(inputCharBuffer: CharBuffer): SensitiveString = SensitiveString(inputCharBuffer.array())
     }
 
 
@@ -28,7 +33,7 @@ class SensitiveString(
     }
 
     fun equals(other: ByteArray, charset: Charset = DEFAULT_CHARSET): Boolean {
-        return this == fromByteArray(other, charset)
+        return this == fromBytes(other, charset)
     }
 
     override fun equals(other: Any?): Boolean {

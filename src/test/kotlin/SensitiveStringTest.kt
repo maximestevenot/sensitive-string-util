@@ -1,3 +1,6 @@
+import java.nio.ByteBuffer
+import java.nio.CharBuffer
+
 internal class SensitiveStringTest {
 
     @org.junit.jupiter.api.Test
@@ -9,9 +12,25 @@ internal class SensitiveStringTest {
     }
 
     @org.junit.jupiter.api.Test
-    fun `from byte array work`() {
+    fun `from byte array should work`() {
         val bytes = "123".toByteArray()
-        val secret = SensitiveString.fromByteArray(bytes)
+        val secret = SensitiveString.fromBytes(bytes)
+
+        assert(secret.data.contentEquals("123".toCharArray()))
+    }
+
+    @org.junit.jupiter.api.Test
+    fun `from byte buffer should work`() {
+        val bytes = "123".toByteArray()
+        val secret = SensitiveString.fromBytes(ByteBuffer.wrap(bytes))
+
+        assert(secret.data.contentEquals("123".toCharArray()))
+    }
+
+    @org.junit.jupiter.api.Test
+    fun `from char buffer should work`() {
+        val charBuffer = CharBuffer.wrap("123".toCharArray())
+        val secret = SensitiveString.fromCharBuffer(charBuffer)
 
         assert(secret.data.contentEquals("123".toCharArray()))
     }
